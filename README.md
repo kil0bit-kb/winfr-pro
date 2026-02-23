@@ -1,4 +1,7 @@
-# 🛡️ Winfr Pro
+<div align="center">
+  <img src="iconwinfr.png" width="128" height="128" alt="Winfr Pro Logo">
+  <h1>🛡️ Winfr Pro</h1>
+</div>
 
 **Professional Graphical User Interface for Microsoft Windows File Recovery**
 > [!IMPORTANT]
