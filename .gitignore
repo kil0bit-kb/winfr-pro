@@ -24,7 +24,7 @@ dist-ssr
 *.sw?
 
 # Development & Metadata
-# history.md (now tracked for project history)
+history.md
 # iconwinfr.png (now tracked for branding)
 winfr_help.txt
 
