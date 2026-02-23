@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Winfr Pro",
+  "version": "0.1.0",
+  "identifier": "com.kil0bit.winfrpro",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Winfr Pro",
+        "decorations": false,
+        "width": 1200,
+        "height": 900,
+        "minWidth": 1200,
+        "minHeight": 900,
+        "visible": false,
+        "center": true
+      },
+      {
+        "label": "splashscreen",
+        "url": "/splashscreen.html",
+        "width": 550,
+        "height": 420,
+        "decorations": false,
+        "center": true,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "resizable": false,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "publisher": "KB - kilObit",
+    "targets": [
+      "msi",
+      "nsis"
+    ],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}

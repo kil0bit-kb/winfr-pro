@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winfr Pro Loading</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #020617;
+            /* slate-950 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: white;
+            user-select: none;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+        }
+
+        .logo-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+            opacity: 0.5;
+            filter: blur(20px);
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+
+        .logo {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: -0.05em;
+            opacity: 0;
+            animation: fade-in 0.8s forwards 0.3s;
+        }
+
+        .title span {
+            color: #3b82f6;
+            /* blue-500 */
+        }
+
+        .status {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 10px;
+            font-weight: 700;
+            opacity: 0;
+            animation: fade-in 0.8s forwards 0.5s;
+        }
+
+        .loader {
+            width: 140px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 15px auto 0;
+            border-radius: 99px;
+            overflow: hidden;
+            opacity: 0;
+            animation: fade-in 0.8s forwards 0.7s;
+        }
+
+        .loader-bar {
+            width: 30%;
+            height: 100%;
+            background: #3b82f6;
+            border-radius: 99px;
+            animation: loader-move 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes loader-move {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(333%);
+            }
+        }
+    </style>
+</head>
+
+<body data-tauri-drag-region>
+    <div class="container" data-tauri-drag-region>
+        <div class="logo-container" data-tauri-drag-region>
+            <div class="logo-glow"></div>
+            <!-- We assume the icon is in the same directory or served relative to the webview root -->
+            <img src="/iconwinfr.png" alt="Logo" class="logo">
+        </div>
+        <h1 class="title">Winfr <span>Pro</span></h1>
+        <div class="status">Initializing Engine</div>
+        <div class="loader">
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+</body>
+
+</html>
