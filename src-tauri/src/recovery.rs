@@ -83,7 +83,7 @@ fn build_winfr_args(config: &RecoveryConfig) -> Vec<String> {
     if config.keep_both && !config.signature_mode {
         // Safe Mode Mitigation: /o:b is known to crash winfr.exe on exFAT drives.
         // Also strictly incompatible with Signature Mode (/x).
-        let is_exfat = config.source_fs.as_ref().map_or(false, |fs| fs.to_lowercase() == "exfat");
+        let is_exfat = config.source_fs.as_ref().is_some_and(|fs| fs.to_lowercase() == "exfat");
         if !is_exfat {
             args.push("/o:b".to_string());
         }
@@ -252,6 +252,7 @@ pub fn start_recovery(app: AppHandle, config: RecoveryConfig) -> Result<String, 
                 let mut current_phase = "scanning";
                 let progress_re = regex::Regex::new(r"(\d+)%").ok();
                 let pass_re = regex::Regex::new(r"(?i)pass\s*(1|2|scanning|recovering)").ok();
+                let recovery_folder_re = regex::Regex::new(r"Recovery_\d{8}_\d{6}").ok();
 
                 while let Ok(n) = stdout_reader.read(&mut buffer) {
                     if n == 0 { break; }
@@ -305,7 +306,7 @@ pub fn start_recovery(app: AppHandle, config: RecoveryConfig) -> Result<String, 
                                     // Pass 1 (Scanning) maps 0-100% to 0-50%
                                     // Pass 2 (Recovering) maps 0-100% to 51-100%
                                     if current_phase == "scanning" {
-                                        pct = pct * 0.5;
+                                        pct *= 0.5;
                                     } else {
                                         pct = 50.0 + (pct * 0.5);
                                     }
@@ -328,7 +329,7 @@ pub fn start_recovery(app: AppHandle, config: RecoveryConfig) -> Result<String, 
                         }
 
                         // Extract the actual recovery folder path
-                        if let Some(caps) = regex::Regex::new(r"Recovery_\d{8}_\d{6}").ok().and_then(|re| re.captures(&trimmed)) {
+                        if let Some(caps) = recovery_folder_re.as_ref().and_then(|re| re.captures(&trimmed)) {
                             let folder_name = &caps[0];
                             let _ = app_stdout.emit("recovery-path", RecoveryEvent {
                                 event_type: "path".to_string(),
@@ -339,7 +340,7 @@ pub fn start_recovery(app: AppHandle, config: RecoveryConfig) -> Result<String, 
                         }
 
                         // Only emit to logs if NOT a progress line to avoid clutter
-                        let is_progress = progress_re.as_ref().map_or(false, |re| re.is_match(&trimmed));
+                        let is_progress = progress_re.as_ref().is_some_and(|re| re.is_match(&trimmed));
                         if !is_progress {
                             // De-duplicate check
                             let should_emit = {
