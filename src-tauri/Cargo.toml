@@ -1,6 +1,6 @@
 [package]
 name = "winfr-pro"
-version = "0.1.0"
+version = "0.1.1"
 description = "Free and open-source professional GUI for Windows File Recovery"
 authors = ["KB - kilObit"]
 edition = "2021"
