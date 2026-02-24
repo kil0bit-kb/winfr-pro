@@ -24,8 +24,7 @@ dist-ssr
 *.sw?
 
 # Development & Metadata
-history.md
-# iconwinfr.png (now tracked for branding)
+history/
 winfr_help.txt
 
 # Tauri / Rust build artifacts are handled in src-tauri/.gitignore

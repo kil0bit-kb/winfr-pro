@@ -35,8 +35,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: v__VERSION__
-          releaseName: 'Winfr Pro v__VERSION__'
-          releaseBody: 'See the assets below for the release.'
+          tagName: ${{ github.ref_name }}
+          releaseName: 'Winfr Pro ${{ github.ref_name }}'
+          releaseBody: 'Professional GUI for Windows File Recovery. See assets below.'
           releaseDraft: true
           prerelease: false
