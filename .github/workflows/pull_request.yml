@@ -1,0 +1,36 @@
+name: Pull Request CI
+
+on:
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  lint-and-check:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Frontend Build Check
+        run: npm run build
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Rust Cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+
+      - name: Rust Backend Check (Clippy)
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml -- -D warnings

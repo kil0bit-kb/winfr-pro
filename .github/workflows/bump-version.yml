@@ -1,0 +1,81 @@
+name: Bump Version
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Type of version bump'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  bump:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN }} # Use a PAT to allow triggering other workflows
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Git Config
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump package.json version
+        shell: bash
+        run: |
+          npm version ${{ github.event.inputs.bump_type }} --no-git-tag-version
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
+      - name: Update tauri.conf.json
+        shell: bash
+        run: |
+          # Use jq to update version in tauri.conf.json
+          jq ".version = \"${{ env.NEW_VERSION }}\"" src-tauri/tauri.conf.json > src-tauri/tauri.conf.json.tmp && mv src-tauri/tauri.conf.json.tmp src-tauri/tauri.conf.json
+
+      - name: Update Cargo.toml
+        shell: bash
+        run: |
+          # Use sed to update version in Cargo.toml [package] section
+          sed -i "s/^version = \".*\"/version = \"${{ env.NEW_VERSION }}\"/" src-tauri/Cargo.toml
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: bump version to v${{ env.NEW_VERSION }}"
+          committer: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          branch: "chore/version-bump-v${{ env.NEW_VERSION }}"
+          title: "chore: bump version to v${{ env.NEW_VERSION }}"
+          body: |
+            Bumping version to v${{ env.NEW_VERSION }}
+            - Bump type: ${{ github.event.inputs.bump_type }}
+            - Updated: `package.json`, `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`
+          labels: |
+            version-bump
+            automated-pr
+
+      - name: Create and Push Tag
+        if: steps.cpr.outputs.pull-request-number != ''
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          git tag -f "v${{ env.NEW_VERSION }}"
+          git push origin "v${{ env.NEW_VERSION }}" --force

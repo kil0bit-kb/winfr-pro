@@ -14,8 +14,6 @@ Winfr Pro is a high-performance, open-source GUI for the official [Windows File 
 
 > [!TIP]
 > **New to Winfr Pro?** Check out the [Comprehensive User Guide](GUIDE.md) for detailed instructions on modes, filters, and advanced options.
-> <img width="1202" height="902" alt="image" src="https://github.com/user-attachments/assets/9deab1fa-1b23-4310-83bb-d4c6c5b87cdd" />
-
 
 ## ✨ Features
 
