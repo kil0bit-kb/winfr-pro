@@ -40,3 +40,4 @@ jobs:
           releaseBody: 'Professional GUI for Windows File Recovery. See assets below.'
           releaseDraft: true
           prerelease: false
+          args: --verbose
