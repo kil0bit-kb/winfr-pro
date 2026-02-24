@@ -1,7 +1,7 @@
 {
   "name": "winfr-pro",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Free and open-source professional GUI for Windows File Recovery",
   "author": "KB - kilObit",
   "type": "module",
