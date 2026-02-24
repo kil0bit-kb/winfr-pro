@@ -30,13 +30,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - uses: tauri-apps/tauri-action@v0
+      - name: Build and Publish
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: v__VERSION__ # tauri-action replaces this with the app version
+          tagName: v__VERSION__
           releaseName: 'Winfr Pro v__VERSION__'
           releaseBody: 'See the assets below for the release.'
           releaseDraft: true
           prerelease: false
-          args: ''
